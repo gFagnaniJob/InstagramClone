@@ -3,17 +3,26 @@ package it.gfagnani.instagramclone;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.parse.FindCallback;
+import com.parse.GetCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
+import com.parse.ParseQuery;
 import com.parse.SaveCallback;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
-public class SignUp extends AppCompatActivity {
+import java.util.List;
+
+public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private EditText name, punchSpeed, punchPower, kickSpeed, kickPower;
+    private TextView textView, txtAllData;
+    private Button btnGetAllData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,23 +34,56 @@ public class SignUp extends AppCompatActivity {
         punchPower = findViewById(R.id.txtPunchPower);
         kickSpeed = findViewById(R.id.txtKickSpeed);
         kickPower = findViewById(R.id.txtKickPower);
+        txtAllData = findViewById(R.id.txtAllData);
+
+
+        textView = findViewById(R.id.txtView);
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ParseQuery<ParseObject> parseQuery = ParseQuery.getQuery("KickBoxer");
+                parseQuery.getInBackground("vuBKWv9HJU", new GetCallback<ParseObject>() {
+                    @Override
+                    public void done(ParseObject object, ParseException e) {
+                        if (e==null) {
+                            if (object != null) {
+                                FancyToast.makeText(SignUp.this,
+                                        object.getString("name") + " found",
+                                        FancyToast.LENGTH_LONG,
+                                        FancyToast.SUCCESS,
+                                        true)
+                                        .show();
+                                textView.setText(object.getString("name") + "\n" +
+                                        "punchSpeed: " + object.getNumber("punchSpeed") + "\n" +
+                                        "punchPower: " + object.getNumber("punchPower") + "\n" +
+                                        "kickSpeed: " + object.getNumber("kickSpeed") + "\n" +
+                                        "kickPower: " + object.getNumber("kickPower"));
+                            } else {
+                                FancyToast.makeText(SignUp.this,
+                                        "no object found",
+                                        FancyToast.LENGTH_LONG,
+                                        FancyToast.ERROR,
+                                        true)
+                                        .show();
+                            }
+                        } else {
+                            FancyToast.makeText(SignUp.this,
+                                    e.getMessage(),
+                                    FancyToast.LENGTH_LONG,
+                                    FancyToast.ERROR,
+                                    true)
+                                    .show();
+                        }
+                    }
+                });
+            }
+        });
+
+        btnGetAllData = findViewById(R.id.btnGetAllData);
+        btnGetAllData.setOnClickListener(SignUp.this);
     }
 
     public void helloWorldTapped(View view) {
-        /*ParseObject boxer = new ParseObject("Boxer");
-        boxer.put("punch_speed", 200);
-        boxer.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e == null) {
-                    Toast.makeText(SignUp.this,
-                                    "boxer object is saved successfully",
-                                    Toast.LENGTH_LONG)
-                    .show();
-                }
-            }
-        });*/
-
         final ParseObject kickBoxer = new ParseObject("KickBoxer");
         try {
             kickBoxer.put("name", name.getText().toString());
@@ -76,6 +118,49 @@ public class SignUp extends AppCompatActivity {
                     FancyToast.ERROR,
                     true)
                     .show();
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnGetAllData:
+                ParseQuery<ParseObject> queryAll = ParseQuery.getQuery("KickBoxer");
+                queryAll.findInBackground(new FindCallback<ParseObject>() {
+                    @Override
+                    public void done(List<ParseObject> objects, ParseException e) {
+                        if (e == null) {
+                            if (objects.size() > 0) {
+                                String temp = "";
+                                for (ParseObject obj : objects) {
+                                    temp = temp + "\t" + obj.get("name");
+                                }
+                                txtAllData.setText(temp);
+                                FancyToast.makeText(SignUp.this,
+                                        "success!",
+                                        FancyToast.LENGTH_LONG,
+                                        FancyToast.SUCCESS,
+                                        true)
+                                        .show();
+                            } else {
+                                FancyToast.makeText(SignUp.this,
+                                        "no objects found",
+                                        FancyToast.LENGTH_LONG,
+                                        FancyToast.ERROR,
+                                        true)
+                                        .show();
+                            }
+                        } else {
+                            FancyToast.makeText(SignUp.this,
+                                    e.getMessage(),
+                                    FancyToast.LENGTH_LONG,
+                                    FancyToast.ERROR,
+                                    true)
+                                    .show();
+                        }
+                    }
+                });
+                break;
         }
     }
 }
