@@ -1,5 +1,6 @@
 package it.gfagnani.instagramclone;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,7 +23,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     private EditText name, punchSpeed, punchPower, kickSpeed, kickPower;
     private TextView textView, txtAllData;
-    private Button btnGetAllData;
+    private Button btnGetAllData, btnTransition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
         kickSpeed = findViewById(R.id.txtKickSpeed);
         kickPower = findViewById(R.id.txtKickPower);
         txtAllData = findViewById(R.id.txtAllData);
+        btnTransition = findViewById(R.id.btnNextActivity);
 
 
         textView = findViewById(R.id.txtView);
@@ -81,6 +83,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         btnGetAllData = findViewById(R.id.btnGetAllData);
         btnGetAllData.setOnClickListener(SignUp.this);
+        btnTransition.setOnClickListener(SignUp.this);
     }
 
     public void helloWorldTapped(View view) {
@@ -160,6 +163,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
                         }
                     }
                 });
+                break;
+            case R.id.btnNextActivity:
+                Intent intent = new Intent(SignUp.this, SignUpLoginActivity.class);
+                startActivity(intent);
                 break;
         }
     }
