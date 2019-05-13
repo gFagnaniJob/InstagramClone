@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (ParseUser.getCurrentUser() != null) {
             startActivity(toSocial);
+            finish();
         }
     }
 
@@ -74,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.btnSignUpLI:
                 startActivity(toSignup);
+                finish();
                 break;
         }
     }
@@ -96,6 +98,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 FancyToast.SUCCESS,
                                 false);
                         startActivity(toSocial);
+                        finish();
                     } else {
                         makeFancyToast("User not found",
                                 FancyToast.ERROR,
