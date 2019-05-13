@@ -12,16 +12,13 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.parse.LogInCallback;
-import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.shashank.sony.fancytoastlib.FancyToast;
 
-import java.security.Key;
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Intent toLogin, toSignup;
+    private Intent toSocial, toSignup;
     private EditText edtEmail, edtPassword;
     private Button btnLogin, btnSignup;
     private String email, password;
@@ -32,7 +29,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
         setTitle("Log In!");
 
-        toLogin = new Intent(LoginActivity.this, SecondActivity.class);
+        toSocial = new Intent(LoginActivity.this, SocialMediaActivity.class);
         toSignup = new Intent(LoginActivity.this, SignUpActivity.class);
 
         edtEmail = findViewById(R.id.edtEnterEmailLI);
@@ -57,14 +54,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         btnSignup.setOnClickListener(LoginActivity.this);
 
         if (ParseUser.getCurrentUser() != null) {
-            ParseUser.getCurrentUser().logOutInBackground(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    makeFancyToast("Logged out successfully",
-                            FancyToast.INFO,
-                            false);
-                }
-            });
+            startActivity(toSocial);
         }
     }
 
@@ -105,7 +95,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         makeFancyToast("Logged in successfully",
                                 FancyToast.SUCCESS,
                                 false);
-                        startActivity(toLogin);
+                        startActivity(toSocial);
                     } else {
                         makeFancyToast("User not found",
                                 FancyToast.ERROR,

@@ -10,7 +10,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.parse.LogOutCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
@@ -18,7 +17,7 @@ import com.shashank.sony.fancytoastlib.FancyToast;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Intent toSignUp, toLogin;
+    private Intent toSocial, toLogin;
     private EditText edtEmail, edtUsername, edtPassword;
     private Button btnSignUp, btnLogin;
     private String email, username, password;
@@ -29,7 +28,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         setContentView(R.layout.activity_sign_up);
         setTitle("Sign Up!");
 
-        toSignUp = new Intent(SignUpActivity.this, SecondActivity.class);
+        toSocial = new Intent(SignUpActivity.this, SocialMediaActivity.class);
         toLogin = new Intent(SignUpActivity.this, LoginActivity.class);
 
         edtEmail = findViewById(R.id.edtEnterEmailSU);
@@ -54,14 +53,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         btnLogin.setOnClickListener(SignUpActivity.this);
 
         if (ParseUser.getCurrentUser() != null) {
-            ParseUser.getCurrentUser().logOutInBackground(new LogOutCallback() {
-                @Override
-                public void done(ParseException e) {
-                    makeFancyToast("Logged out successfully",
-                            FancyToast.INFO,
-                            false);
-                }
-            });
+            startActivity(toSocial);
         }
 
     }
@@ -108,7 +100,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                             makeFancyToast("Signed Up successfully!",
                                     FancyToast.SUCCESS,
                                     false);
-                            startActivity(toSignUp);
+                            startActivity(toSocial);
                         } else {
                             makeFancyToast(e.getMessage(),
                                     FancyToast.ERROR,
